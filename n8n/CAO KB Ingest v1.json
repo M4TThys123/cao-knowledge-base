@@ -1,0 +1,606 @@
+{
+  "name": "CAO KB Ingest v1",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "44984d4c-3ef4-46f9-bfd0-59e3528ef232",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "TRUNCATE cao_chunks RESTART IDENTITY;",
+        "options": {}
+      },
+      "id": "dcbe9a7e-91f2-4523-a8c6-13e760ab503f",
+      "name": "Truncate cao_chunks",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        240,
+        0
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "list",
+        "owner": {
+          "__rl": true,
+          "mode": "name",
+          "value": "M4TThys123"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "cao-knowledge-base"
+        },
+        "filePath": "content/hoofdstuk-1-algemeen"
+      },
+      "id": "e7394293-4fd5-4b4a-a9aa-367db165cfb9",
+      "name": "List h1 (algemeen)",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        -368
+      ],
+      "webhookId": "e84eaa9a-089a-4d7a-8ab6-25168700ce65",
+      "credentials": {
+        "githubApi": {
+          "id": "0idQi4Vkz9ZFHvHC",
+          "name": "GitHub account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "id": "71e8d3e5-463a-445b-af17-a792ca6fa2be",
+      "name": "Merge File Lists",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "list",
+        "owner": {
+          "__rl": true,
+          "mode": "name",
+          "value": "M4TThys123"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "cao-knowledge-base"
+        },
+        "filePath": "content/hoofdstuk-2-rechtspositie"
+      },
+      "id": "717f4938-7be8-4536-9666-e7737b1e3bcf",
+      "name": "List h2 (rechtspositie)",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        -128
+      ],
+      "webhookId": "cc7add8e-d1eb-4b67-a259-36c87bf47d4b",
+      "credentials": {
+        "githubApi": {
+          "id": "0idQi4Vkz9ZFHvHC",
+          "name": "GitHub account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "list",
+        "owner": {
+          "__rl": true,
+          "mode": "name",
+          "value": "M4TThys123"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "cao-knowledge-base"
+        },
+        "filePath": "content/hoofdstuk-4-beloning"
+      },
+      "id": "bc4cd6ac-1470-4eff-a68d-4e645372f91e",
+      "name": "List h4 (beloning)",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        128
+      ],
+      "webhookId": "544d9df7-5d33-4a37-b520-7e6db65bacba",
+      "credentials": {
+        "githubApi": {
+          "id": "0idQi4Vkz9ZFHvHC",
+          "name": "GitHub account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "list",
+        "owner": {
+          "__rl": true,
+          "mode": "name",
+          "value": "M4TThys123"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "cao-knowledge-base"
+        },
+        "filePath": "content/hoofdstuk-5-pensioen"
+      },
+      "id": "45ca53ac-e063-46b4-adfd-bb6f1c4673f7",
+      "name": "List h5 (pensioen)",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        368
+      ],
+      "webhookId": "3f1a698f-c4c7-45e9-ad89-900bd4953c63",
+      "credentials": {
+        "githubApi": {
+          "id": "0idQi4Vkz9ZFHvHC",
+          "name": "GitHub account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst items = $input.all();\nreturn items\n  .map(i => i.json)\n  .filter(j => j && j.type === 'file' && /\\.md$/i.test(j.name || j.path || ''))\n  .map(j => ({ json: { path: j.path, name: j.name, sha: j.sha } }));\n"
+      },
+      "id": "a3b3be9f-6dff-46cc-9425-fab39edd5d36",
+      "name": "Filter .md Files",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "mode": "name",
+          "value": "M4TThys123"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "cao-knowledge-base"
+        },
+        "filePath": "={{ $json.path }}",
+        "asBinaryProperty": false,
+        "additionalParameters": {}
+      },
+      "id": "5f35c2c7-6741-44b5-85a5-6cd75d70ebcb",
+      "name": "Get File Content",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        0
+      ],
+      "webhookId": "bde0b776-82ab-4f34-b3b7-4dae6ae0e831",
+      "credentials": {
+        "githubApi": {
+          "id": "0idQi4Vkz9ZFHvHC",
+          "name": "GitHub account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * CAO Knowledge Base ingest - n8n Code node (TypeVersion 2)\n *\n * Plek in flow: tussen \"GitHub Get File Content\" (output) en \"Supabase vector store insert\" (input).\n *\n * INPUT (per item):\n *   {\n *     json: {\n *       path: \"content/hoofdstuk-2-rechtspositie/artikel-14-rechtspositie.md\",\n *       content: \"<base64>\",\n *       encoding: \"base64\"\n *     }\n *   }\n *\n * OUTPUT (één item per H2-chunk):\n *   {\n *     json: {\n *       content:  \"[Source: ... | Section: Hoofdstuk X > Artikel Y > ...]\\n\\n<cleaned section markdown>\",\n *       metadata: { doc_key, artikel_nummer, versie, subsectie, bronvermelding, chunk_id, chunk_group_id, ... }\n *     }\n *   }\n *\n * Helpers (inline, geen externe imports):\n *   - fnv1a64(str)              : 64-bit hash voor content/chunk-identificatie (idempotency)\n *   - parseYaml(text)           : mini YAML parser voor frontmatter — bool/int/inline-array coercie\n *   - slugify(s)                : URL-safe identifier\n *   - parseMetaBlock(section)   : extract ```meta``` codeblock met type coercie (bool/int/array)\n *   - removeMetaBlock(section)  : strip ```meta``` codeblock uit sectie-tekst\n *   - splitH1H2(text)           : split body op H1/H2 headings, code-fence aware\n *   - extractHeading(section)   : pak heading van eerste regel\n *   - parseArtikelStr(s)        : \"20a\" → { nummer: 20, str: \"20a\" }\n *   - parseVersionHint(s)       : \"huidige versie\" / \"na WMZF\" → 'huidig' / 'na_wmzf' / null\n *   - looksLikeSubsection(s)    : detecteer subsectie-keywords (Algemeen, Fase A, Tussenpoos, Overgangsrecht, Uitzondering...)\n *   - versieLabel(v)            : 'huidig' → 'huidige versie', 'na_wmzf' → 'na WMZF', 'n.v.t.' → null\n *\n * Geen async/await, geen fetch — pure sync data-transformatie.\n */\n\nfunction fnv1a64(str) {\n  let h = 0xcbf29ce484222325n;\n  const p = 0x100000001b3n;\n  for (let i = 0; i < str.length; i++) {\n    const code = str.charCodeAt(i);\n    h ^= BigInt(code & 0xff);\n    h = (h * p) & 0xffffffffffffffffn;\n    h ^= BigInt((code >>> 8) & 0xff);\n    h = (h * p) & 0xffffffffffffffffn;\n  }\n  return h.toString(16).padStart(16, '0');\n}\n\nfunction parseYaml(text) {\n  const m = text.match(/^---\\n([\\s\\S]*?)\\n---\\n?([\\s\\S]*)$/);\n  if (!m) return { fm: {}, body: text };\n  const fm = {};\n  const lines = m[1].split('\\n');\n  let currentKey = null;\n  let currentArrayItem = null;\n  for (const line of lines) {\n    if (/^\\s*$/.test(line) || /^\\s*#/.test(line)) continue;\n    if (/^\\S/.test(line)) {\n      const kv = line.match(/^([A-Za-z_][\\w-]*):\\s*(.*)$/);\n      if (!kv) continue;\n      currentKey = kv[1];\n      currentArrayItem = null;\n      let val = kv[2].trim();\n      if (val === '') {\n        fm[currentKey] = [];\n      } else if (val.startsWith('[') && val.endsWith(']')) {\n        const inner = val.slice(1, -1).trim();\n        fm[currentKey] = inner === '' ? [] : inner.split(',').map(s => s.trim().replace(/^[\"']|[\"']$/g, ''));\n      } else {\n        if ((val.startsWith('\"') && val.endsWith('\"')) || (val.startsWith(\"'\") && val.endsWith(\"'\"))) val = val.slice(1, -1);\n        if (val === 'true') fm[currentKey] = true;\n        else if (val === 'false') fm[currentKey] = false;\n        else if (/^-?\\d+$/.test(val)) fm[currentKey] = parseInt(val, 10);\n        else fm[currentKey] = val;\n      }\n    } else {\n      const trimmed = line.trim();\n      if (trimmed.startsWith('- ')) {\n        const rest = trimmed.slice(2).trim();\n        const kv = rest.match(/^([A-Za-z_][\\w-]*):\\s*(.*)$/);\n        if (!Array.isArray(fm[currentKey])) fm[currentKey] = [];\n        if (kv) {\n          currentArrayItem = {};\n          let v = kv[2].trim();\n          if ((v.startsWith('\"') && v.endsWith('\"')) || (v.startsWith(\"'\") && v.endsWith(\"'\"))) v = v.slice(1, -1);\n          currentArrayItem[kv[1]] = v;\n          fm[currentKey].push(currentArrayItem);\n        } else {\n          let v = rest;\n          if ((v.startsWith('\"') && v.endsWith('\"')) || (v.startsWith(\"'\") && v.endsWith(\"'\"))) v = v.slice(1, -1);\n          fm[currentKey].push(v);\n        }\n      } else if (currentArrayItem) {\n        const kv = trimmed.match(/^([A-Za-z_][\\w-]*):\\s*(.*)$/);\n        if (kv) {\n          let v = kv[2].trim();\n          if ((v.startsWith('\"') && v.endsWith('\"')) || (v.startsWith(\"'\") && v.endsWith(\"'\"))) v = v.slice(1, -1);\n          currentArrayItem[kv[1]] = v;\n        }\n      }\n    }\n  }\n  return { fm, body: m[2] };\n}\n\nfunction slugify(s) {\n  if (!s) return null;\n  let r = String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');\n  r = r.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/-+/g, '-');\n  return r || null;\n}\n\nfunction parseMetaBlock(section) {\n  const re = /```meta\\s*\\n([\\s\\S]*?)\\n```/;\n  const m = section.match(re);\n  if (!m) return null;\n  const meta = {};\n  for (const line of m[1].split('\\n')) {\n    const kv = line.match(/^\\s*([A-Za-z_][\\w-]*)\\s*:\\s*(.*?)\\s*$/);\n    if (!kv) continue;\n    let val = kv[2].trim();\n    if (val === '') {\n      meta[kv[1]] = '';\n    } else if (val === 'true') {\n      meta[kv[1]] = true;\n    } else if (val === 'false') {\n      meta[kv[1]] = false;\n    } else if (/^-?\\d+$/.test(val)) {\n      meta[kv[1]] = parseInt(val, 10);\n    } else if (val.startsWith('[') && val.endsWith(']')) {\n      const inner = val.slice(1, -1).trim();\n      meta[kv[1]] = inner === '' ? [] : inner.split(',').map(s => s.trim().replace(/^[\"']|[\"']$/g, ''));\n    } else {\n      if ((val.startsWith('\"') && val.endsWith('\"')) || (val.startsWith(\"'\") && val.endsWith(\"'\"))) val = val.slice(1, -1);\n      meta[kv[1]] = val;\n    }\n  }\n  return meta;\n}\n\nfunction removeMetaBlock(section) {\n  return section.replace(/```meta\\s*\\n[\\s\\S]*?\\n```\\n?/, '').trim();\n}\n\nfunction splitH1H2(text) {\n  const lines = text.split('\\n');\n  let inFence = false;\n  let current = [];\n  const chunks = [];\n  for (const line of lines) {\n    if (/^(```|~~~)/.test(line.trim())) inFence = !inFence;\n    const isH = !inFence && /^#{1,2}\\s+/.test(line) && !/^#{3,}\\s+/.test(line);\n    if (isH && current.length > 0) {\n      const c = current.join('\\n').trim();\n      if (c) chunks.push(c);\n      current = [];\n    }\n    current.push(line);\n  }\n  const tail = current.join('\\n').trim();\n  if (tail) chunks.push(tail);\n  return chunks;\n}\n\nfunction extractHeading(section) {\n  const first = (section.split('\\n')[0] || '').trim();\n  const m = first.match(/^(#{1,2})\\s+(.*)$/);\n  if (!m) return { level: null, text: null };\n  return { level: m[1].length, text: m[2].trim() };\n}\n\nfunction parseArtikelStr(s) {\n  const m = String(s).trim().match(/^(\\d+)([a-z]?)$/i);\n  if (!m) return { nummer: null, str: String(s) };\n  return { nummer: parseInt(m[1], 10), str: m[1] + (m[2] || '').toLowerCase() };\n}\n\nfunction parseVersionHint(s) {\n  if (!s) return null;\n  const v = String(s).toLowerCase().trim();\n  if (v === 'huidig' || v === 'huidige' || v === 'huidige versie') return 'huidig';\n  if (v === 'na_wmzf' || v === 'na wmzf' || v === 'na de wmzf') return 'na_wmzf';\n  return null;\n}\n\nfunction looksLikeSubsection(s) {\n  if (!s) return false;\n  const t = String(s).trim();\n  const known = ['Algemeen', 'Fase A', 'Fase B', 'Fase C', 'Tussenpoos', 'Overgangsrecht'];\n  if (known.indexOf(t) !== -1) return true;\n  if (/^Uitzondering(\\s|$)/i.test(t)) return true;\n  return false;\n}\n\nfunction versieLabel(v) {\n  if (v === 'huidig') return 'huidige versie';\n  if (v === 'na_wmzf') return 'na WMZF';\n  return null;\n}\n\nconst items = $input.all();\nconst out = [];\nconst now = new Date().toISOString();\n\nfor (const item of items) {\n  const source = item.json.path || 'unknown.md';\n  const base64 = item.json.content || '';\n  const encoding = item.json.encoding || 'base64';\n  const text = encoding === 'base64'\n    ? Buffer.from(base64, 'base64').toString('utf-8')\n    : base64;\n\n  const contentHash = fnv1a64(text);\n  const { fm, body } = parseYaml(text);\n\n  if (!fm.doc_key) throw new Error('Missing doc_key in ' + source);\n  if (fm.parent_hoofdstuk === undefined || fm.parent_hoofdstuk === null) throw new Error('Missing parent_hoofdstuk in ' + source);\n  if (!fm.parent_hoofdstuk_titel) throw new Error('Missing parent_hoofdstuk_titel in ' + source);\n\n  const docKey = fm.doc_key;\n  const defaultVersie = fm.default_versie || 'huidig';\n  const hoofdstuk = fm.parent_hoofdstuk;\n  const hoofdstukTitel = fm.parent_hoofdstuk_titel;\n\n  const sections = splitH1H2(body);\n\n  let h1Text = null;\n  for (const s of sections) {\n    const h = extractHeading(s);\n    if (h.level === 1) { h1Text = h.text; break; }\n  }\n  if (!h1Text) h1Text = fm.doc_title || docKey;\n\n  const artikelTitelMap = new Map();\n  const versionsByArtikel = new Map();\n  for (const s of sections) {\n    const h = extractHeading(s);\n    if (!h.text || h.level !== 2) continue;\n    const m = h.text.match(/^Artikel\\s+(\\d+[a-z]?)\\s*-\\s*(.+?)(?:\\s*\\((.+?)\\))?$/i);\n    if (!m) continue;\n    const parsed = parseArtikelStr(m[1]);\n    const groep2 = m[2].trim();\n    const groep3 = m[3] ? m[3].trim() : null;\n    const sectionMeta = parseMetaBlock(s);\n    const vHint = parseVersionHint(groep3);\n    const v = (sectionMeta && sectionMeta.versie) || vHint || defaultVersie;\n    if (!looksLikeSubsection(groep2) && !artikelTitelMap.has(parsed.str)) {\n      artikelTitelMap.set(parsed.str, groep2);\n    }\n    if (!versionsByArtikel.has(parsed.str)) versionsByArtikel.set(parsed.str, new Set());\n    versionsByArtikel.get(parsed.str).add(v);\n  }\n\n  let chunkIndex = 0;\n  for (const sectionRaw of sections) {\n    const heading = extractHeading(sectionRaw);\n    if (heading.level === 1) continue;\n    if (!heading.text) continue;\n\n    const meta = parseMetaBlock(sectionRaw);\n    const cleaned = removeMetaBlock(sectionRaw);\n\n    const bodyAfterHeading = cleaned.split('\\n').slice(1).join('\\n').trim();\n    if (!bodyAfterHeading) continue;\n\n    const headingText = heading.text;\n    const isToelichting = /^Toelichting\\b/i.test(headingText) || (meta && meta.is_toelichting === true);\n\n    const artikelMatch = headingText.match(/^Artikel\\s+(\\d+[a-z]?)\\s*-\\s*(.+?)(?:\\s*\\((.+?)\\))?$/i);\n    let artikelNummer = null;\n    let artikelStr = null;\n    let groep2 = null;\n    let groep3 = null;\n    if (artikelMatch) {\n      const parsed = parseArtikelStr(artikelMatch[1]);\n      artikelNummer = parsed.nummer;\n      artikelStr = parsed.str;\n      groep2 = artikelMatch[2].trim();\n      groep3 = artikelMatch[3] ? artikelMatch[3].trim() : null;\n    }\n\n    if (meta && meta.artikel !== undefined && meta.artikel !== '') {\n      const parsed = parseArtikelStr(String(meta.artikel));\n      if (parsed.nummer !== null) artikelNummer = parsed.nummer;\n      if (parsed.str) artikelStr = parsed.str;\n    }\n\n    let behoortBijArtikel = null;\n    if (isToelichting) {\n      if (!meta || meta.behoort_bij_artikel === undefined) {\n        throw new Error('Toelichting \"' + headingText + '\" in ' + source + ' mist behoort_bij_artikel in meta-block');\n      }\n      behoortBijArtikel = parseInt(String(meta.behoort_bij_artikel), 10);\n      if (artikelNummer === null) artikelNummer = behoortBijArtikel;\n      if (artikelStr === null) artikelStr = String(behoortBijArtikel);\n    } else if (meta && meta.behoort_bij_artikel !== undefined) {\n      behoortBijArtikel = parseInt(String(meta.behoort_bij_artikel), 10);\n    }\n\n    let versie = null;\n    if (meta && meta.versie) {\n      versie = String(meta.versie);\n    } else if (groep3) {\n      versie = parseVersionHint(groep3);\n    }\n    if (!versie) versie = defaultVersie;\n    if (['huidig', 'na_wmzf', 'n.v.t.'].indexOf(versie) === -1) {\n      throw new Error('Invalid versie \"' + versie + '\" in ' + source + ' section \"' + headingText + '\"');\n    }\n\n    let subsectie = null;\n    if (meta && meta.subsectie) {\n      subsectie = String(meta.subsectie);\n    } else if (groep2 && looksLikeSubsection(groep2)) {\n      subsectie = groep2;\n    }\n\n    let subsectieDisplay = null;\n    if (groep2 && looksLikeSubsection(groep2)) {\n      const groep3IsVersion = groep3 && parseVersionHint(groep3) !== null;\n      if (groep3 && !groep3IsVersion) {\n        subsectieDisplay = groep2 + ' (' + groep3 + ')';\n      } else {\n        subsectieDisplay = groep2;\n      }\n    }\n    if (!subsectieDisplay && subsectie) {\n      let h = String(subsectie).replace(/_/g, ' ');\n      subsectieDisplay = h.charAt(0).toUpperCase() + h.slice(1);\n    }\n\n    let artikelTitel = null;\n    if (artikelNummer !== null) {\n      if (fm['artikel_titel_' + artikelNummer]) {\n        artikelTitel = fm['artikel_titel_' + artikelNummer];\n      } else if (artikelStr && artikelTitelMap.has(artikelStr)) {\n        artikelTitel = artikelTitelMap.get(artikelStr);\n      } else if (groep2) {\n        artikelTitel = groep2;\n      }\n    }\n\n    let geldigVanaf = (meta && meta.geldig_vanaf) ? String(meta.geldig_vanaf) : null;\n    let geldigTot = (meta && meta.geldig_tot) ? String(meta.geldig_tot) : null;\n    if (versie === 'huidig' && !geldigTot) geldigTot = 'inwerkingtreding_wmzf';\n    if (versie === 'na_wmzf' && !geldigVanaf) geldigVanaf = 'inwerkingtreding_wmzf';\n\n    const isOvergangsrecht = (meta && meta.is_overgangsrecht === true) ||\n                             /^Artikel\\s+\\d+[a-z]?\\s*-\\s*Overgangsrecht/i.test(headingText) ||\n                             (subsectie === 'Overgangsrecht' || subsectie === 'overgangsrecht');\n    const bevatTabel = !!(meta && meta.bevat_tabel === true);\n    const bevatSchema = !!(meta && (meta.bevat_schema === true || meta.is_schema === true));\n\n    let verwijstNaar = [];\n    if (meta && meta.verwijst_naar !== undefined) {\n      verwijstNaar = Array.isArray(meta.verwijst_naar)\n        ? meta.verwijst_naar\n        : [String(meta.verwijst_naar)];\n    }\n\n    const chunkGroupId = artikelNummer !== null\n      ? docKey + '::artikel-' + (artikelStr || artikelNummer) + '-' + versie\n      : docKey + '::' + (slugify(headingText) || ('section-' + chunkIndex));\n\n    let bronvermelding;\n    const vLabel = versieLabel(versie);\n    if (isToelichting && artikelNummer !== null) {\n      const toelichtingTitel = headingText.replace(/\\s*\\([^)]*\\)\\s*$/, '').trim();\n      bronvermelding = 'Hoofdstuk ' + hoofdstuk + ' > Artikel ' + (artikelStr || artikelNummer) + ' > ' + toelichtingTitel;\n    } else if (!artikelMatch && artikelNummer !== null) {\n      bronvermelding = 'Hoofdstuk ' + hoofdstuk + ' > Artikel ' + (artikelStr || artikelNummer) + ' > ' + headingText;\n    } else if (subsectieDisplay && artikelNummer !== null) {\n      const suffix = vLabel ? ' (' + vLabel + ')' : '';\n      bronvermelding = 'Hoofdstuk ' + hoofdstuk + ' > Artikel ' + (artikelStr || artikelNummer) + ' > ' + subsectieDisplay + suffix;\n    } else if (artikelNummer !== null && artikelTitel) {\n      const versions = versionsByArtikel.get(artikelStr);\n      const includeVersie = versions && versions.size > 1 && vLabel;\n      const suffix = includeVersie ? ' (' + vLabel + ')' : '';\n      bronvermelding = 'Hoofdstuk ' + hoofdstuk + ' > Artikel ' + (artikelStr || artikelNummer) + ' - ' + artikelTitel + suffix;\n    } else {\n      bronvermelding = 'Hoofdstuk ' + hoofdstuk + ' > ' + headingText;\n    }\n\n    const sectionPath = [hoofdstukTitel, headingText];\n    const parentSection = slugify(headingText) || ('section-' + chunkIndex);\n    const chunkHash = fnv1a64(cleaned);\n    const chunkId = docKey + ':' + contentHash.slice(0, 12) + ':' + chunkIndex;\n    const prefix = '[Source: ' + source + ' | Section: ' + bronvermelding + ']\\n\\n';\n    const finalContent = prefix + cleaned;\n\n    const metadata = {\n      doc_key: docKey,\n      doc_title: fm.doc_title || h1Text,\n      source: source,\n      chunk_id: chunkId,\n      chunk_index: chunkIndex,\n      chunk_group_id: chunkGroupId,\n      chunk_hash: chunkHash,\n      content_hash: contentHash,\n      artikel_nummer: artikelNummer,\n      artikel_str: artikelStr,\n      artikel_titel: artikelTitel,\n      hoofdstuk: hoofdstuk,\n      hoofdstuk_titel: hoofdstukTitel,\n      subsectie: subsectie,\n      versie: versie,\n      geldig_vanaf: geldigVanaf,\n      geldig_tot: geldigTot,\n      is_overgangsrecht: isOvergangsrecht,\n      is_toelichting: isToelichting,\n      behoort_bij_artikel: behoortBijArtikel,\n      bevat_tabel: bevatTabel,\n      bevat_schema: bevatSchema,\n      verwijst_naar: verwijstNaar,\n      parent_section: parentSection,\n      section_path: sectionPath,\n      heading_level: heading.level,\n      heading_text: headingText,\n      bronvermelding: bronvermelding,\n      topic: fm.topic || null,\n      tags: fm.tags || [],\n      doc_version: fm.doc_version || null,\n      looptijd_start: fm.looptijd_start || null,\n      looptijd_eind: fm.looptijd_eind || null,\n      access_level: (meta && meta.access_level) || fm.default_access_level || 'public',\n      model_name: 'gemini-embedding-001',\n      model_dim: 3072,\n      content_raw: cleaned,\n      created_at: now,\n      updated_at: now\n    };\n\n    out.push({ json: { content: finalContent, metadata: metadata } });\n    chunkIndex++;\n  }\n}\n\nreturn out;\n"
+      },
+      "id": "87bade79-bee3-4c71-b219-8e8513ee6cf6",
+      "name": "Parse + Chunk + Enrich",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "cao_chunks",
+          "cachedResultName": "cao_chunks"
+        },
+        "embeddingBatchSize": 10,
+        "options": {
+          "queryName": "match_cao_chunks"
+        }
+      },
+      "id": "f5af323d-8921-4b12-a179-a38367dab8a5",
+      "name": "Insert cao_chunks",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        1712,
+        0
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "L6lDLnfaIZNB1Pl9",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "id": "a1747ffd-17ab-423e-9597-1c986a068c5e",
+      "name": "Google Embedding",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1632,
+        224
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZErDRJBw5HpkPdoJ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.content }}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "doc_key",
+                "value": "={{ $json.metadata.doc_key }}"
+              },
+              {
+                "name": "doc_title",
+                "value": "={{ $json.metadata.doc_title }}"
+              },
+              {
+                "name": "source",
+                "value": "={{ $json.metadata.source }}"
+              },
+              {
+                "name": "chunk_id",
+                "value": "={{ $json.metadata.chunk_id }}"
+              },
+              {
+                "name": "chunk_index",
+                "value": "={{ $json.metadata.chunk_index }}"
+              },
+              {
+                "name": "chunk_group_id",
+                "value": "={{ $json.metadata.chunk_group_id }}"
+              },
+              {
+                "name": "chunk_hash",
+                "value": "={{ $json.metadata.chunk_hash }}"
+              },
+              {
+                "name": "content_hash",
+                "value": "={{ $json.metadata.content_hash }}"
+              },
+              {
+                "name": "artikel_nummer",
+                "value": "={{ $json.metadata.artikel_nummer }}"
+              },
+              {
+                "name": "artikel_str",
+                "value": "={{ $json.metadata.artikel_str }}"
+              },
+              {
+                "name": "artikel_titel",
+                "value": "={{ $json.metadata.artikel_titel }}"
+              },
+              {
+                "name": "hoofdstuk",
+                "value": "={{ $json.metadata.hoofdstuk }}"
+              },
+              {
+                "name": "hoofdstuk_titel",
+                "value": "={{ $json.metadata.hoofdstuk_titel }}"
+              },
+              {
+                "name": "subsectie",
+                "value": "={{ $json.metadata.subsectie }}"
+              },
+              {
+                "name": "versie",
+                "value": "={{ $json.metadata.versie }}"
+              },
+              {
+                "name": "geldig_vanaf",
+                "value": "={{ $json.metadata.geldig_vanaf }}"
+              },
+              {
+                "name": "geldig_tot",
+                "value": "={{ $json.metadata.geldig_tot }}"
+              },
+              {
+                "name": "is_overgangsrecht",
+                "value": "={{ $json.metadata.is_overgangsrecht }}"
+              },
+              {
+                "name": "is_toelichting",
+                "value": "={{ $json.metadata.is_toelichting }}"
+              },
+              {
+                "name": "behoort_bij_artikel",
+                "value": "={{ $json.metadata.behoort_bij_artikel }}"
+              },
+              {
+                "name": "bevat_tabel",
+                "value": "={{ $json.metadata.bevat_tabel }}"
+              },
+              {
+                "name": "bevat_schema",
+                "value": "={{ $json.metadata.bevat_schema }}"
+              },
+              {
+                "name": "section_path",
+                "value": "={{ ($json.metadata.section_path || []).join(' > ') }}"
+              },
+              {
+                "name": "heading_text",
+                "value": "={{ $json.metadata.heading_text }}"
+              },
+              {
+                "name": "bronvermelding",
+                "value": "={{ $json.metadata.bronvermelding }}"
+              },
+              {
+                "name": "model_name",
+                "value": "={{ $json.metadata.model_name }}"
+              },
+              {
+                "name": "model_dim",
+                "value": "={{ $json.metadata.model_dim }}"
+              },
+              {
+                "name": "created_at",
+                "value": "={{ $json.metadata.created_at }}"
+              },
+              {
+                "name": "updated_at",
+                "value": "={{ $json.metadata.updated_at }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "d4cb4d53-4776-4626-86db-f624634a6c10",
+      "name": "Data Loader CAO",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        1824,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "chunkSize": 100000,
+        "options": {}
+      },
+      "id": "67b6e2b8-016c-46bb-9a6a-f413665cda8e",
+      "name": "No-op Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        1904,
+        448
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Truncate cao_chunks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Truncate cao_chunks": {
+      "main": [
+        [
+          {
+            "node": "List h1 (algemeen)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "List h2 (rechtspositie)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "List h4 (beloning)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "List h5 (pensioen)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List h1 (algemeen)": {
+      "main": [
+        [
+          {
+            "node": "Merge File Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge File Lists": {
+      "main": [
+        [
+          {
+            "node": "Filter .md Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List h2 (rechtspositie)": {
+      "main": [
+        [
+          {
+            "node": "Merge File Lists",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "List h4 (beloning)": {
+      "main": [
+        [
+          {
+            "node": "Merge File Lists",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "List h5 (pensioen)": {
+      "main": [
+        [
+          {
+            "node": "Merge File Lists",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Filter .md Files": {
+      "main": [
+        [
+          {
+            "node": "Get File Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get File Content": {
+      "main": [
+        [
+          {
+            "node": "Parse + Chunk + Enrich",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse + Chunk + Enrich": {
+      "main": [
+        [
+          {
+            "node": "Insert cao_chunks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Embedding": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Insert cao_chunks",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Loader CAO": {
+      "ai_document": [
+        [
+          {
+            "node": "Insert cao_chunks",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No-op Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Data Loader CAO",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "cb957bfd-e1e1-444a-b804-9ce86ffd8187",
+  "meta": {
+    "aiBuilderAssisted": true,
+    "instanceId": "473c5dc84894ac84e0b744b7e2226b08589713c83cb7d146ca0cce838ccca0d5"
+  },
+  "id": "DpJP5jr8bxYbDTEx",
+  "tags": []
+}
