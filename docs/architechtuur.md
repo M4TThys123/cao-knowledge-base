@@ -1,4 +1,9 @@
 # CAO Chatbot — Architectuur
+
+### 🔗 Live demo
+
+Test de bot via de publieke chat-UI: **[n8n.srv1594642.hstgr.cloud/webhook/10d81666-…/chat](https://n8n.srv1594642.hstgr.cloud/webhook/10d81666-f618-4781-8090-fef5eaac1ff7/chat)**
+
 ### Wat is gebouwd
 
 Een AI-chatagent die vragen beantwoordt over de ABU CAO voor Uitzendkrachten 2026, met focus op de wijzigingen per 1 januari 2026. Bereikbaar via een ingebouwde chat-UI én een externe webhook. Bij twijfel of persoonlijke casuïstiek valt de bot terug op een Topdesk-handover.
