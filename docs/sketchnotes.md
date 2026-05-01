@@ -66,9 +66,9 @@
 ```
 
 - Sommige artikelen hebben **2 versies** (nu vs na nieuwe wet)
-- Standaard: bot pakt **huidige versie**
-- Vraag specifiek over toekomst? → bot kan switchen
-- Gerealiseerd via **metadata-filter** in Postgres
+- Bot pakt **alleen huidige versie** — `na_wmzf` blijft afgeschermd
+- Gerealiseerd via **metadata-filter** in Postgres RPC
+- Bidirectionele switch (vraag specifiek over toekomst) is een productie-uitbreiding (zie roadmap)
 
 > "Voorkomt dat de bot per ongeluk uit een wet citeert die nog niet geldt."
 
@@ -97,18 +97,18 @@
 │
 ├─ 2. Wat is een uitzendbeding?        [definities]
 │
-├─ 3. Hoe lang is fase B?              [default versie]
-│       ↓
-├─ 4. En na de WMZF?                   [⭐ versie-switch]
+├─ 3. Hoe lang is fase B?              [default versie-filter]
 │
-├─ 5. Wijziging vakantiebijslag 2026?  [kern opdracht]
+├─ 4. Wijziging vakantiebijslag 2026?  [kern opdracht]
 │
-├─ 6. How long does phase A last?      [meertalig]
+├─ 5. How long does phase A last?      [meertalig]
 │
-└─ 7. Werkgever betaalt niet?          [→ Topdesk]
+└─ 6. Werkgever betaalt niet?          [→ Topdesk]
 ```
 
-> 7 vragen, ~10 min. Refereer naar **usecases.md** voor backup-vragen.
+> 6 vragen, ~10 min. Refereer naar **usecases.md** voor backup-vragen.
+
+> ⚠️ Versie-switch ("en na de WMZF?") niet meer in demo — bidirectionele override zit niet in dit prototype. Zie `roadmap.md` → "Bekende beperkingen" voor de drie geplande opties.
 
 ---
 

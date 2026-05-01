@@ -1,7 +1,7 @@
 # CAO Chatbot — Roadmap
 
 > Status van het prototype en taken richting een productiewaardige flow.
-> Laatst bijgewerkt: april 2026
+> Laatst bijgewerkt: 2026-05-02
 
 **Legenda**
 
@@ -141,6 +141,21 @@
 - 💡 **Vergelijkings-modus**: "wat is het verschil tussen ABU-CAO en NBBU-CAO op punt X?"
 - 💡 **Self-service voor HR**: HR upload contract, bot checkt of het CAO-conform is
 - 💡 **A/B testing-framework** voor system prompts (welke formulering geeft betere antwoorden)
+
+---
+
+## Bekende beperkingen prototype
+
+> Dingen die werken zoals nu gebouwd, maar bewust beperkt zijn voor de demo. Niet noodzakelijk roadmap-items — eerder caveats voor reviewers en handoff.
+
+- **Versie-switching is defensief, niet bidirectioneel.** De RPC filtert default op `versie IN ('huidig', 'n.v.t.')` — `na_wmzf`-chunks worden nooit teruggegeven. Voordeel: bot citeert nooit toekomstige wetgeving. Nadeel: vragen specifiek over post-WMZF kan de bot niet beantwoorden uit retrieval. Drie opties verkend (zie roadmap "Retrieval verbeteren"):
+    - **A** — RPC default uit, agent disambigueert via system prompt (simpel, risico op door-elkaar-citeren)
+    - **B** — twee aparte `knowledge_base` tools onder de agent (`huidig` / `na_wmzf`), agent kiest. **Aanbevolen**.
+    - **C** — pre-classify met LLM-call, dynamische filter
+- **`body.language`-parameter wordt genegeerd.** Webhook-input accepteert `language: "nl"|"en"|"auto"` maar de workflow doet altijd taaldetectie. Override-pad nog niet ingebouwd.
+- **`Truncate cao_chunks` node heeft geen Postgres-credential.** Twee opties: (1) Postgres-credential aanmaken (Supabase pooler URL → koppelen aan node), (2) node disabled laten + handmatig truncaten via Supabase SQL editor voor re-runs.
+- **Topdesk-link in fallback is een placeholder.** Hardcoded `https://uitzendbureau.topdesk.net/tas/public/ssp/` — niet geverifieerd of dat een echte URL is bij een echte afnemer.
+- **Live chat-URL is gekoppeld aan n8n webhookId.** Bij workflow-recreate of n8n-migratie verandert de ID en daarmee de publieke link in `README.md` en `architechtuur.md`. Update die op twee plekken bij verandering.
 
 ---
 

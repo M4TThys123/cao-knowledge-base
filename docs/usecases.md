@@ -48,9 +48,9 @@ Wat is het verschil tussen de oude en nieuwe vakantiedagen-regeling?
 
 ---
 
-## Use Case 3 — Versie-onderscheid (huidig vs. na WMZF)
+## Use Case 3 — Versie-filter (defensief)
 
-**Wat het demonstreert:** metadata-filtering werkt — bot pakt standaard de huidige versie, en kan op vraag de toekomstige versie ophalen.
+**Wat het demonstreert:** metadata-filtering schermt toekomstige wetgeving af — bot citeert standaard alleen de huidige versie. Voorkomt dat de bot uit een wet citeert die nog niet geldt.
 
 ### Hoofdvraag (default = huidige versie)
 
@@ -58,17 +58,19 @@ Wat is het verschil tussen de oude en nieuwe vakantiedagen-regeling?
 Hoe lang is fase B?
 ```
 
-### Follow-up (toont versie-override)
+> Verwacht antwoord: 3 jaar (huidige versie), met bron Hoofdstuk 2 > Artikel 14.
 
-```
-En hoe lang wordt fase B na de Wet meer zekerheid flexwerkers?
-```
-
-### Backup-vraag (vraagt vergelijking)
+### Backup-vraag
 
 ```
 Wat verandert er aan fase B?
 ```
+
+> De bot kan deze beantwoorden vanuit de system prompt context (waarin de WMZF-wijziging benoemd wordt), maar citeert geen `na_wmzf`-tekst — die is afgeschermd.
+
+### ⚠️ Bekende beperking
+
+Bidirectionele versie-override (vraag specifiek over post-WMZF en bot pakt `na_wmzf`-chunks) zit **niet** in dit prototype. Drie opties verkend in `roadmap.md` ("Bekende beperkingen prototype"). Aanbevolen voor productie: optie B (twee aparte `knowledge_base` tools, agent kiest).
 
 ---
 
@@ -292,17 +294,18 @@ Hoeveel vakantiedagen krijg ik bij FNV?
 
 ## Aanbevolen demo-volgorde
 
-Voor een live demo van ~10 minuten, zeven vragen achter elkaar:
+Voor een live demo van ~10 minuten, zes vragen achter elkaar:
 
 | Stap | Vraag | Use case |
 |---|---|---|
 | 1 | Hoe lang duurt fase A? | UC1 — warming up |
 | 2 | Wat is een uitzendbeding? | UC1 — definities |
-| 3 | Hoe lang is fase B? | UC3 — default versie |
-| 4 | En hoe lang wordt fase B na de Wet meer zekerheid flexwerkers? | UC3 — versie-override (**wow-moment**) |
-| 5 | Wat verandert er per 1 januari 2026 aan vakantiebijslag? | UC2 — kern opdracht |
-| 6 | How long does phase A last? | UC4 — meertalig |
-| 7 | Mijn werkgever betaalt mijn vakantiebijslag niet, wat nu? | UC5 — fallback |
+| 3 | Hoe lang is fase B? | UC3 — default versie-filter |
+| 4 | Wat verandert er per 1 januari 2026 aan vakantiebijslag? | UC2 — kern opdracht |
+| 5 | How long does phase A last? | UC4 — meertalig |
+| 6 | Mijn werkgever betaalt mijn vakantiebijslag niet, wat nu? | UC5 — fallback |
+
+> Originele "vraag 4 — versie-override" verwijderd: bidirectionele versie-switching zit niet in dit prototype (zie `roadmap.md` → "Bekende beperkingen prototype").
 
 **Tip:** gebruik per demo-fragment een **verse `sessionId`** om memory-pollutie tussen talen te voorkomen.
 
